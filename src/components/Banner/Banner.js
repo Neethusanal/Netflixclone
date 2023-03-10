@@ -1,16 +1,29 @@
-import React from 'react'
+import React, { useEffect ,useState} from 'react'
 import './Banner.css'
+import axios from '../../axios'
+import {API_KEY,imageurl} from '../../constants/Constants'
 
 const Banner = () => {
+  const [movie, setMovie] = useState([])
+
+  useEffect(() => {
+    axios.get(`trending/all/week?api_key=${API_KEY}&language=en-US`).then((response)=>{
+      console.log(response.data.results[0])
+     
+      setMovie(response.data.results[0])
+    })  
+  }, [])
+  
   return (
-    <div className='banner'>
+    <div style={{backgroundImage:`url(${movie? imageurl+movie.backdrop_path:""})`}}
+     className='banner'>
         <div className='content'>
-        <h1 className='title'>Movie Name</h1>
+        <h1 className='title'>{movie?movie.name:" "}</h1>
         <div className='Banner-buttons'>
             <button className="button">Play</button>
             <button className='button'>My list</button>
         </div>
-        <h1 className='description'>loremipsum is dummy text that occupies the space where the real content should be. If you are designing an online business such as a blog and you do not have content already, you use a lorem ipsum generator</h1>
+        <h1 className='description'>{movie?movie.overview:""}</h1>
         </div>
        <div className="fade-bottom"></div>
 
